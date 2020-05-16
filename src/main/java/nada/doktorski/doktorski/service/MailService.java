@@ -28,6 +28,8 @@ public class MailService {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             String mailtToSend = infoDestiantion;
 
+            sortData(statisticsListDto);
+
             messageHelper.setTo(mailtToSend.split(","));
             messageHelper.setSubject("Statistics collected");
             messageHelper.setText(createEmailBody(statisticsListDto), true);
@@ -37,6 +39,19 @@ public class MailService {
         } catch (MailException e) {
             // runtime exception; compiler will not force you to handle it
         }
+    }
+
+    private void sortData(StatisticsListDto statisticsListDto) {
+        statisticsListDto.getStatisticsPerPage().sort((statisticsDto, t1) -> {
+            if (t1.getName().equals("K")) {
+                return -1;
+            }
+            if (statisticsDto.getName().equals("K")) {
+                return 1;
+            }
+            return statisticsDto.getName().compareTo(t1.getName());
+        });
+
     }
 
     private String createEmailBody(StatisticsListDto statisticsListDto) {
