@@ -4,6 +4,8 @@ import nada.doktorski.doktorski.model.StatisticsListDto;
 import nada.doktorski.doktorski.service.MailService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 public class MailController {
 
@@ -15,7 +17,7 @@ public class MailController {
 
     @CrossOrigin // TODO this sucks but leave it for now
     @PostMapping("/sendStatistics")
-    public void sendStatisticsInMail(@RequestBody StatisticsListDto statisticsListDto) throws Exception {
-        mailService.sendStatisticsInMail(statisticsListDto);
+    public void sendStatisticsInMail(@RequestBody StatisticsListDto statisticsListDto,  HttpServletRequest request) throws Exception {
+        mailService.sendStatisticsInMail(statisticsListDto, request.getRemoteAddr());
     }
 }

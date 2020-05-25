@@ -22,7 +22,7 @@ public class MailService {
         this.javaMailSender = javaMailSender;
     }
 
-    public void sendStatisticsInMail(StatisticsListDto statisticsListDto) throws Exception {
+    public void sendStatisticsInMail(StatisticsListDto statisticsListDto, String remoteAddr) throws Exception {
 
         MimeMessagePreparator messagePreparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
@@ -32,7 +32,7 @@ public class MailService {
 
             messageHelper.setTo(mailtToSend.split(","));
             messageHelper.setSubject("Statistics collected");
-            messageHelper.setText(createEmailBody(statisticsListDto), true);
+            messageHelper.setText(createEmailBody(statisticsListDto, remoteAddr), true);
         };
         try {
             javaMailSender.send(messagePreparator);
@@ -54,7 +54,7 @@ public class MailService {
 
     }
 
-    private String createEmailBody(StatisticsListDto statisticsListDto) {
+    private String createEmailBody(StatisticsListDto statisticsListDto, String remoteAddr) {
         String emailBody = "<html> <head>\n" +
                 "<style>\n" +
                 "table {\n" +
@@ -79,6 +79,7 @@ public class MailService {
             emailBody += "<h2>Eksperiment 2 (da se pronađe 1 broj sa zadatom pozadinom)</h2> </br> </br>";
         }
 
+        emailBody += "Nepoznata osoba: " + remoteAddr.hashCode() + " </br> </br>";
 
         emailBody += "<table>";
         emailBody += createTableHeader(statisticsListDto);
